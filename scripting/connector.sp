@@ -1,12 +1,12 @@
 #include <sourcemod>
 #include <system2>
+#include <SteamWorks>
 
 #define PLUGIN_VERSION "0.0.1"
-#define IPIFY_API_ENDPOINT "https://api.ipify.org"
 
 ConVar tf2pickupOrgApiAddress = null;
 ConVar tf2pickupOrgApiKey = null;
-ConVar ipv4PublicAddress = null;
+Handle timer = null;
 
 public Plugin myinfo = 
 {
@@ -20,12 +20,10 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
   tf2pickupOrgApiAddress = CreateConVar("sm_tf2pickuporg_api_address", "", "tf2pickup.org endpoint address");
+  tf2pickupOrgApiAddress.AddChangeHook(OnApiAddressOrKeyChange);
+
   tf2pickupOrgApiKey = CreateConVar("sm_tf2pickuporg_api_key", "", "tf2pickup.org API key");
-  ipv4PublicAddress = CreateConVar("sm_ipv4_public_address", "", "Public IPv4 address");
-
-  // RegAdminCmd("sm_gameserver_heartbeat", HeartbeatGameServer, "Send a heartbeat to the tf2pickup.org endpoint");
-
-  DiscoverPublicIpV4Address();
+  tf2pickupOrgApiKey.AddChangeHook(OnApiAddressOrKeyChange);
 }
 
 public void OnPluginEnd()
@@ -33,19 +31,66 @@ public void OnPluginEnd()
 
 }
 
-public Action HeartbeatGameServer()
+public void OnApiAddressOrKeyChange(ConVar convar, char[] oldValue, char[] newValue)
 {
+  if (timer != null) {
+    KillTimer(timer);
+  }
 
+  char endpoint[128];
+  tf2pickupOrgApiAddress.GetString(endpoint, sizeof(endpoint));
+
+  char apiKey[128];
+  tf2pickupOrgApiKey.GetString(apiKey, sizeof(apiKey));
+
+  if (!StrEqual(endpoint, "") && !StrEqual(apiKey, "")) {
+    HeartbeatGameServer(null);
+    timer = CreateTimer(60.0, HeartbeatGameServer, _, TIMER_REPEAT);
+  }
 }
 
-public void DiscoverPublicIpV4Address()
+public Action HeartbeatGameServer(Handle timerHandle)
 {
-  System2HTTPRequest request = new System2HTTPRequest(IpDiscoveryHttpCallback, IPIFY_API_ENDPOINT);
-  request.GET();
+  char apiAddress[128];
+  tf2pickupOrgApiAddress.GetString(apiAddress, sizeof(apiAddress));
+
+  char apiKey[128];
+  tf2pickupOrgApiKey.GetString(apiKey, sizeof(apiKey));
+
+  if (StrEqual(apiAddress, "") || StrEqual(apiKey, "")) {
+    return Plugin_Stop;
+  }
+
+  int ipAddr[4];
+  SteamWorks_GetPublicIP(ipAddr);
+
+  char address[64];
+  Format(address, sizeof(address), "%d.%d.%d.%d", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
+  System2_URLEncode(address, sizeof(address), address);
+
+  char port[6];
+  GetConVarString(FindConVar("hostport"), port, sizeof(port));
+
+  char name[64];
+  GetConVarString(FindConVar("hostname"), name, sizeof(name));
+  System2_URLEncode(name, sizeof(name), name);
+
+  char rconPassword[64];
+  GetConVarString(FindConVar("rcon_password"), rconPassword, sizeof(rconPassword));
+  System2_URLEncode(rconPassword, sizeof(rconPassword), rconPassword);
+
+  System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/game-servers/", apiAddress);
+  request.SetHeader("Authorization", "api-key %s", apiKey);
+  request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
+  request.SetData("address=%s&port=%s&name=%s&rconPassword=%s", address, port, name, rconPassword);
+  request.SetUserAgent("tf2pickup.org connector plugin %s", PLUGIN_VERSION);
+  request.POST();
   delete request;
+
+  return Plugin_Continue;
 }
 
-public void IpDiscoveryHttpCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
+public void HeartbeatHttpCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
 {
   if (!success) {
     char url[128];
@@ -54,8 +99,7 @@ public void IpDiscoveryHttpCallback(bool success, const char[] error, System2HTT
     return;
   }
 
-  char ipAddress[16];
-  response.GetContent(ipAddress, sizeof(ipAddress));
-  ipv4PublicAddress.SetString(ipAddress);
-  PrintToServer("Public IPv4 address is %s", ipAddress);
+  char buf[1024];
+  response.GetContent(buf, sizeof(buf));
+  PrintToServer("%s", buf);
 }
