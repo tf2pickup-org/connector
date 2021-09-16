@@ -1,4 +1,4 @@
-name: Compile
+name: Build
 
 on:
   push:
@@ -44,3 +44,4 @@ jobs:
       with:
         name: connector
         path: scripting/connector.smx
+        if-no-files-found: error
