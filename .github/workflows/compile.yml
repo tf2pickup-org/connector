@@ -23,7 +23,7 @@ jobs:
       uses: rumblefrog/setup-sp@v1.0.1
     
     - run: |
-        mkdir -p addons/sourcemomd/plugins
+        mkdir -p addons/sourcemod/plugins
 
         wget "https://forums.alliedmods.net/attachment.php?attachmentid=188744&d=1618607414" -O system2.zip
         unzip -o system2.zip -d addons/sourcemod/
