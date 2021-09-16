@@ -39,4 +39,5 @@ jobs:
     - name: Upload compiled plugin
       uses: actions/upload-artifact@v2
       with:
+        name: connector
         path: scripting/connector.smx
