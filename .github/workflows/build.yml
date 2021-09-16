@@ -5,12 +5,13 @@ on:
     branches:
       - 'master'
       - '*.*.*'
-    tags:
-      - '*.*.*'
 
   pull_request:
     branches:
       - 'master'
+
+  release:
+    types: [ created, edited ]
 
 jobs:
   build:
@@ -45,3 +46,12 @@ jobs:
         name: connector
         path: scripting/connector.smx
         if-no-files-found: error
+    
+    - name: Upload release
+      if: github.event_name == 'release'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: scripting/connector.smx
+        tag: ${{ github.ref }}
+        overwrite: true
