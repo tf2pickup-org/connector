@@ -32,5 +32,6 @@ jobs:
         tar -xf steamworks.tgz --strip-components=1
 
         spcomp \
+          -iaddons/sourcemod/scripting/include \
           scripting/connector.sp \
           -o scripting/connector.smx
