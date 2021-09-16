@@ -33,4 +33,4 @@ jobs:
 
         spcomp \
           scripting/connector.sp \
-          -o addons/sourcemod/plugins/connector.smx
+          -o scripting/connector.smx
