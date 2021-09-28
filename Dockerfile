@@ -7,4 +7,4 @@ RUN wget "https://forums.alliedmods.net/attachment.php?attachmentid=188744&d=161
   && tar -xf steamworks.tgz --strip-components=1 -C "${SERVER_DIR}/tf/" \
   && rm -f steamworks.tgz
 
-COPY scripting/connector.smx "$SERVER_DIR/tf/addons/sourcemod/plugins/connector.smx"
+COPY connector.smx "$SERVER_DIR/tf/addons/sourcemod/plugins/connector.smx"

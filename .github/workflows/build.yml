@@ -47,6 +47,23 @@ jobs:
         path: scripting/connector.smx
         if-no-files-found: error
 
+    - name: Upload release
+      if: github.event_name == 'release'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: scripting/connector.smx
+        tag: ${{ github.ref }}
+        overwrite: true
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download the plugin
+      uses: actions/download-artifact@v2
+      with:
+        name: connector.smx
+
     - name: Build Docker image
       uses: docker/build-push-action@v2
       with:
@@ -66,12 +83,3 @@ jobs:
 
     - name: Stop the container
       run: docker stop connector
-
-    - name: Upload release
-      if: github.event_name == 'release'
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: scripting/connector.smx
-        tag: ${{ github.ref }}
-        overwrite: true
