@@ -51,6 +51,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         tags: connector:test
+        context: .
 
     - name: Start Docker container
       run: docker run --name connector -e "RCON_PASSWORD=123456" connector:test
