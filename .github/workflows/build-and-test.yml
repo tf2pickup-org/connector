@@ -1,4 +1,4 @@
-name: Build
+name: Build and test
 
 on:
   push:
@@ -46,7 +46,7 @@ jobs:
         name: connector
         path: scripting/connector.smx
         if-no-files-found: error
-    
+
     - name: Upload release
       if: github.event_name == 'release'
       uses: svenstaro/upload-release-action@v2
@@ -55,3 +55,36 @@ jobs:
         file: scripting/connector.smx
         tag: ${{ github.ref }}
         overwrite: true
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Download the plugin
+      uses: actions/download-artifact@v2
+      with:
+        name: connector
+        path: connector.smx
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v2
+      with:
+        tags: connector:test
+        context: .
+
+    - name: Start Docker container
+      run: docker run --name connector -e "RCON_PASSWORD=123456" -d connector:test
+
+    - name: Sleep for 45s
+      uses: juliangruber/sleep-action@v1
+      with:
+        time: 45s
+
+    - name: Check whether the connector is listed
+      run: docker exec connector /home/tf2/server/rcon -H 127.0.0.1 -p 27015 -P 123456 "sm plugins list" | grep "tf2pickup.org connector"
+
+    - name: Stop the container
+      run: docker stop connector
