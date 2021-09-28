@@ -54,7 +54,7 @@ jobs:
         context: .
 
     - name: Start Docker container
-      run: docker run --name connector -e "RCON_PASSWORD=123456" connector:test
+      run: docker run --name connector -e "RCON_PASSWORD=123456" -d connector:test
 
     - name: Sleep for 30s
       uses: juliangruber/sleep-action@v1
