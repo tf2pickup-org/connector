@@ -63,7 +63,7 @@ jobs:
     - name: Download the plugin
       uses: actions/download-artifact@v2
       with:
-        name: connector.smx
+        name: connector
 
     - name: Build Docker image
       uses: docker/build-push-action@v2
