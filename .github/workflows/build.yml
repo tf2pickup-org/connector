@@ -62,7 +62,7 @@ jobs:
         time: 30s
 
     - name: Check whether the connector is listed
-      run: docker exec -ti connector /home/tf2/server/rcon -H 127.0.0.1 -p 27015 -P 123456 "sm plugins list" | grep "tf2pickup.org connector"
+      run: docker exec connector /home/tf2/server/rcon -H 127.0.0.1 -p 27015 -P 123456 "sm plugins list" | grep "tf2pickup.org connector"
 
     - name: Stop the container
       run: docker stop connector
