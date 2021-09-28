@@ -1,4 +1,4 @@
-name: Build
+name: Build and test
 
 on:
   push:
@@ -78,10 +78,10 @@ jobs:
     - name: Start Docker container
       run: docker run --name connector -e "RCON_PASSWORD=123456" -d connector:test
 
-    - name: Sleep for 30s
+    - name: Sleep for 45s
       uses: juliangruber/sleep-action@v1
       with:
-        time: 30s
+        time: 45s
 
     - name: Check whether the connector is listed
       run: docker exec connector /home/tf2/server/rcon -H 127.0.0.1 -p 27015 -P 123456 "sm plugins list" | grep "tf2pickup.org connector"
