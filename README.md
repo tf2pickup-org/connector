@@ -5,8 +5,8 @@
     <img src="https://img.shields.io/github/v/release/tf2pickup-org/connector" alt="Latest release">
   </a>
 
-  <a href="https://github.com/tf2pickup-org/connector/actions/workflows/build.yml">
-    <img src="https://github.com/tf2pickup-org/connector/actions/workflows/build.yml/badge.svg" alt="Test status">
+  <a href="https://github.com/tf2pickup-org/connector/actions/workflows/build-and-test.yml">
+    <img src="https://github.com/tf2pickup-org/connector/actions/workflows/build-and-test.yml/badge.svg" alt="Test status">
   </a>
 
   <a href="https://opensource.org/licenses/MIT">
