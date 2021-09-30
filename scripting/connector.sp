@@ -5,14 +5,14 @@
 #define PLUGIN_VERSION "0.0.1"
 
 ConVar tf2pickupOrgApiAddress = null;
-ConVar tf2pickupOrgApiKey = null;
+ConVar tf2pickupOrgSecret = null;
 Handle timer = null;
 
 public Plugin myinfo = 
 {
   name = "tf2pickup.org connector",
   author = "garrappachc",
-  description = "Connect your TF2 gameserver to your tf2pickup.org instance",
+  description = "Connect a TF2 gameserver to your tf2pickup.org instance",
   version = PLUGIN_VERSION,
   url= "https://github.com/tf2pickup-org"
 }
@@ -20,10 +20,10 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
   tf2pickupOrgApiAddress = CreateConVar("sm_tf2pickuporg_api_address", "", "tf2pickup.org endpoint address");
-  tf2pickupOrgApiAddress.AddChangeHook(OnApiAddressOrKeyChange);
+  tf2pickupOrgApiAddress.AddChangeHook(OnApiAddressOrSecretChange);
 
-  tf2pickupOrgApiKey = CreateConVar("sm_tf2pickuporg_api_key", "", "tf2pickup.org API key");
-  tf2pickupOrgApiKey.AddChangeHook(OnApiAddressOrKeyChange);
+  tf2pickupOrgSecret = CreateConVar("sm_tf2pickuporg_secret", "", "tf2pickup.org gameserver secret");
+  tf2pickupOrgSecret.AddChangeHook(OnApiAddressOrSecretChange);
 }
 
 public void OnPluginEnd()
@@ -31,7 +31,7 @@ public void OnPluginEnd()
 
 }
 
-public void OnApiAddressOrKeyChange(ConVar convar, char[] oldValue, char[] newValue)
+public void OnApiAddressOrSecretChange(ConVar convar, char[] oldValue, char[] newValue)
 {
   if (timer != null) {
     KillTimer(timer);
@@ -40,10 +40,10 @@ public void OnApiAddressOrKeyChange(ConVar convar, char[] oldValue, char[] newVa
   char endpoint[128];
   tf2pickupOrgApiAddress.GetString(endpoint, sizeof(endpoint));
 
-  char apiKey[128];
-  tf2pickupOrgApiKey.GetString(apiKey, sizeof(apiKey));
+  char secret[128];
+  tf2pickupOrgSecret.GetString(secret, sizeof(secret));
 
-  if (!StrEqual(endpoint, "") && !StrEqual(apiKey, "")) {
+  if (!StrEqual(endpoint, "") && !StrEqual(secret, "")) {
     HeartbeatGameServer(null);
     timer = CreateTimer(60.0, HeartbeatGameServer, _, TIMER_REPEAT);
   }
@@ -54,10 +54,10 @@ public Action HeartbeatGameServer(Handle timerHandle)
   char apiAddress[128];
   tf2pickupOrgApiAddress.GetString(apiAddress, sizeof(apiAddress));
 
-  char apiKey[128];
-  tf2pickupOrgApiKey.GetString(apiKey, sizeof(apiKey));
+  char secret[128];
+  tf2pickupOrgSecret.GetString(secret, sizeof(secret));
 
-  if (StrEqual(apiAddress, "") || StrEqual(apiKey, "")) {
+  if (StrEqual(apiAddress, "") || StrEqual(secret, "")) {
     return Plugin_Stop;
   }
 
@@ -80,7 +80,7 @@ public Action HeartbeatGameServer(Handle timerHandle)
   System2_URLEncode(rconPassword, sizeof(rconPassword), rconPassword);
 
   System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/game-servers/", apiAddress);
-  request.SetHeader("Authorization", "api-key %s", apiKey);
+  request.SetHeader("Authorization", "secret %s", secret);
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
   request.SetData("address=%s&port=%s&name=%s&rconPassword=%s", address, port, name, rconPassword);
   request.SetUserAgent("tf2pickup.org connector plugin %s", PLUGIN_VERSION);
