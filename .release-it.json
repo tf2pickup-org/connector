@@ -1,0 +1,29 @@
+{
+  "git": {
+    "commitMessage": "chore: release version ${version}"
+  },
+  "github": {
+    "release": true
+  },
+  "npm": {
+    "publish": false
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    },
+    "@j-ulrich/release-it-regex-bumper": {
+      "in": {
+        "file": "scripting/connector.sp",
+        "search": "#define PLUGIN_VERSION \"(\\d+\\.\\d+\\.\\d+)\"",
+        "versionCaptureGroup": 1
+      },
+      "out": {
+        "file": "scripting/connector.sp",
+        "search": "#define PLUGIN_VERSION \"(\\d+\\.\\d+\\.\\d+)\"",
+        "replace": "#define PLUGIN_VERSION \"{{version}}\""
+      }
+    }
+  }
+}
