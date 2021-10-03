@@ -82,6 +82,7 @@ public Action HeartbeatGameServer(Handle timerHandle)
   System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/game-servers/", apiAddress);
   request.SetHeader("Authorization", "secret %s", secret);
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
+  request.SetUserAgent("connector/%s", PLUGIN_VERSION);
   request.SetData("address=%s&port=%s&name=%s&rconPassword=%s", address, port, name, rconPassword);
   request.SetUserAgent("tf2pickup.org connector plugin %s", PLUGIN_VERSION);
   request.POST();
