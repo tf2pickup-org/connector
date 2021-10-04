@@ -51,7 +51,7 @@ public void OnApiAddressOrSecretChange(ConVar convar, char[] oldValue, char[] ne
   }
 }
 
-public Action CommandHeartbeat()
+public Action CommandHeartbeat(int args)
 {
   return HeartbeatGameServer(null);
 }
