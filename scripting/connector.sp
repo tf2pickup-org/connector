@@ -14,7 +14,7 @@ public Plugin myinfo =
   author = "garrappachc",
   description = "Connect a TF2 gameserver to your tf2pickup.org instance",
   version = PLUGIN_VERSION,
-  url= "https://github.com/tf2pickup-org"
+  url = "https://github.com/tf2pickup-org"
 }
 
 public void OnPluginStart()
@@ -24,6 +24,8 @@ public void OnPluginStart()
 
   tf2pickupOrgSecret = CreateConVar("sm_tf2pickuporg_secret", "", "tf2pickup.org gameserver secret");
   tf2pickupOrgSecret.AddChangeHook(OnApiAddressOrSecretChange);
+
+  RegServerCmd("sm_tf2pickuporg_heartbeat", CommandHeartbeat);
 }
 
 public void OnPluginEnd()
@@ -47,6 +49,11 @@ public void OnApiAddressOrSecretChange(ConVar convar, char[] oldValue, char[] ne
     HeartbeatGameServer(null);
     timer = CreateTimer(60.0, HeartbeatGameServer, _, TIMER_REPEAT);
   }
+}
+
+public Action CommandHeartbeat()
+{
+  return HeartbeatGameServer(null);
 }
 
 public Action HeartbeatGameServer(Handle timerHandle)
@@ -83,7 +90,7 @@ public Action HeartbeatGameServer(Handle timerHandle)
   request.SetHeader("Authorization", "secret %s", secret);
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
   request.SetData("address=%s&port=%s&name=%s&rconPassword=%s", address, port, name, rconPassword);
-  request.SetUserAgent("tf2pickup.org connector plugin %s", PLUGIN_VERSION);
+  request.SetUserAgent("tf2pickup.org connector plugin/%s", PLUGIN_VERSION);
   request.POST();
   delete request;
 
