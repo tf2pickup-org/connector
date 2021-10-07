@@ -26,7 +26,7 @@ public void OnPluginStart()
   tf2pickupOrgSecret = CreateConVar("sm_tf2pickuporg_secret", "", "tf2pickup.org gameserver secret");
   tf2pickupOrgSecret.AddChangeHook(OnApiAddressOrSecretChange);
 
-  tf2pickupOrgVoiceChannelName = CreateConVar("sm_tf2pickup_voice_channel_name", "", "gameserver voice channel name");
+  tf2pickupOrgVoiceChannelName = CreateConVar("sm_tf2pickuporg_voice_channel_name", "", "gameserver voice channel name");
 
   RegServerCmd("sm_tf2pickuporg_heartbeat", CommandHeartbeat);
 }
