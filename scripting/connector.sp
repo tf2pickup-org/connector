@@ -6,6 +6,7 @@
 
 ConVar tf2pickupOrgApiAddress = null;
 ConVar tf2pickupOrgSecret = null;
+ConVar tf2pickupOrgVoiceChannelName = null;
 Handle timer = null;
 
 public Plugin myinfo = 
@@ -24,6 +25,8 @@ public void OnPluginStart()
 
   tf2pickupOrgSecret = CreateConVar("sm_tf2pickuporg_secret", "", "tf2pickup.org gameserver secret");
   tf2pickupOrgSecret.AddChangeHook(OnApiAddressOrSecretChange);
+
+  tf2pickupOrgVoiceChannelName = CreateConVar("sm_tf2pickuporg_voice_channel_name", "", "gameserver voice channel name");
 
   RegServerCmd("sm_tf2pickuporg_heartbeat", CommandHeartbeat);
 }
@@ -86,10 +89,14 @@ public Action HeartbeatGameServer(Handle timerHandle)
   GetConVarString(FindConVar("rcon_password"), rconPassword, sizeof(rconPassword));
   System2_URLEncode(rconPassword, sizeof(rconPassword), rconPassword);
 
+  char voiceChannelName[64];
+  tf2pickupOrgVoiceChannelName.GetString(voiceChannelName, sizeof(voiceChannelName));
+  System2_URLEncode(voiceChannelName, sizeof(voiceChannelName), voiceChannelName);
+
   System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/game-servers/", apiAddress);
   request.SetHeader("Authorization", "secret %s", secret);
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
-  request.SetData("address=%s&port=%s&name=%s&rconPassword=%s", address, port, name, rconPassword);
+  request.SetData("address=%s&port=%s&name=%s&rconPassword=%s&voiceChannelName=%s", address, port, name, rconPassword, voiceChannelName);
   request.SetUserAgent("tf2pickup.org connector plugin/%s", PLUGIN_VERSION);
   request.POST();
   delete request;
