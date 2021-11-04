@@ -28,7 +28,7 @@ public void OnPluginStart()
   tf2pickupOrgSecret.AddChangeHook(OnApiAddressOrSecretChange);
 
   tf2pickupOrgVoiceChannelName = CreateConVar("sm_tf2pickuporg_voice_channel_name", "", "gameserver voice channel name");
-  tf2pickupOrgPriority = CreateConVar("sm_tf2pickuporg_priority", "0", "gameserver priority", 0, true, -9999.99, true, 9999.99);
+  tf2pickupOrgPriority = CreateConVar("sm_tf2pickuporg_priority", "1", "gameserver priority", 0, true, -9999.99, true, 9999.99);
 
   RegServerCmd("sm_tf2pickuporg_heartbeat", CommandHeartbeat);
 }
