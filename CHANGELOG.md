@@ -1,3 +1,10 @@
+# [0.3.0](https://github.com/tf2pickup-org/connector/compare/0.2.1...0.3.0) (2021-11-04)
+
+
+### Features
+
+* add gameserver priority param ([#9](https://github.com/tf2pickup-org/connector/issues/9)) ([244b324](https://github.com/tf2pickup-org/connector/commit/244b32471f1b10788f24460e5d774656376895e8))
+
 ## [0.2.1](https://github.com/tf2pickup-org/connector/compare/0.2.0...0.2.1) (2021-10-07)
 
 # [0.2.0](https://github.com/tf2pickup-org/connector/compare/0.1.0...0.2.0) (2021-10-07)
