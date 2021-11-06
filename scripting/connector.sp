@@ -8,6 +8,7 @@ ConVar tf2pickupOrgApiAddress = null;
 ConVar tf2pickupOrgSecret = null;
 ConVar tf2pickupOrgVoiceChannelName = null;
 ConVar tf2pickupOrgPriority = null;
+ConVar tf2pickupOrgOverrideInternalAddress = null;
 Handle timer = null;
 
 public Plugin myinfo = 
@@ -29,6 +30,9 @@ public void OnPluginStart()
 
   tf2pickupOrgVoiceChannelName = CreateConVar("sm_tf2pickuporg_voice_channel_name", "", "gameserver voice channel name");
   tf2pickupOrgPriority = CreateConVar("sm_tf2pickuporg_priority", "1", "gameserver priority", _, true, -9999.99, true, 9999.99);
+
+  tf2pickupOrgOverrideInternalAddress = CreateConVar("sm_tf2pickuporg_override_internal_address", "", "override internal game server address");
+  tf2pickupOrgOverrideInternalAddress.AddChangeHook(OnApiAddressOrSecretChange);
 
   RegServerCmd("sm_tf2pickuporg_heartbeat", CommandHeartbeat);
 }
@@ -100,8 +104,20 @@ public Action HeartbeatGameServer(Handle timerHandle)
   System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/game-servers/", apiAddress);
   request.SetHeader("Authorization", "secret %s", secret);
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
-  request.SetData("address=%s&port=%s&name=%s&rconPassword=%s&voiceChannelName=%s&priority=%d",
+
+  char data[256];
+  Format(data, sizeof(data), "address=%s&port=%s&name=%s&rconPassword=%s&voiceChannelName=%s&priority=%d",
     address, port, name, rconPassword, voiceChannelName, priority);
+
+  char overrideInternalAddress[64];
+  tf2pickupOrgOverrideInternalAddress.GetString(overrideInternalAddress, sizeof(overrideInternalAddress));
+
+  if (!StrEqual(overrideInternalAddress, "")) {
+    System2_URLEncode(overrideInternalAddress, sizeof(overrideInternalAddress), overrideInternalAddress);
+    Format(data, sizeof(data), "%s&internalIpAddress=%s", data, overrideInternalAddress);
+  }
+
+  request.SetData("%s", data);
   request.SetUserAgent("tf2pickup.org connector plugin/%s", PLUGIN_VERSION);
   request.POST();
   delete request;
