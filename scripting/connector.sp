@@ -77,6 +77,10 @@ public Action HeartbeatGameServer(Handle timerHandle)
     return Plugin_Stop;
   }
 
+  System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/game-servers/", apiAddress);
+  request.SetHeader("Authorization", "secret %s", secret);
+  request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
+
   int ipAddr[4];
   SteamWorks_GetPublicIP(ipAddr);
 
@@ -95,19 +99,20 @@ public Action HeartbeatGameServer(Handle timerHandle)
   GetConVarString(FindConVar("rcon_password"), rconPassword, sizeof(rconPassword));
   System2_URLEncode(rconPassword, sizeof(rconPassword), rconPassword);
 
+  char data[256];
+  Format(data, sizeof(data), "address=%s&port=%s&name=%s&rconPassword=%s",
+    address, port, name, rconPassword);
+
   char voiceChannelName[64];
   tf2pickupOrgVoiceChannelName.GetString(voiceChannelName, sizeof(voiceChannelName));
-  System2_URLEncode(voiceChannelName, sizeof(voiceChannelName), voiceChannelName);
+
+  if (!StrEqual(voiceChannelName, "")) {
+    System2_URLEncode(voiceChannelName, sizeof(voiceChannelName), voiceChannelName);
+    Format(data, sizeof(data), "%s&voiceChannelName=%s", data, voiceChannelName);
+  }
 
   int priority = tf2pickupOrgPriority.IntValue;
-
-  System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/game-servers/", apiAddress);
-  request.SetHeader("Authorization", "secret %s", secret);
-  request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
-
-  char data[256];
-  Format(data, sizeof(data), "address=%s&port=%s&name=%s&rconPassword=%s&voiceChannelName=%s&priority=%d",
-    address, port, name, rconPassword, voiceChannelName, priority);
+  Format(data, sizeof(data), "%s&priority=%d", data, priority);
 
   char overrideInternalAddress[64];
   tf2pickupOrgOverrideInternalAddress.GetString(overrideInternalAddress, sizeof(overrideInternalAddress));
