@@ -114,10 +114,8 @@ public Action HeartbeatGameServer(Handle timerHandle)
 
   if (!StrEqual(overrideInternalAddress, "")) {
     System2_URLEncode(overrideInternalAddress, sizeof(overrideInternalAddress), overrideInternalAddress);
-    Format(data, sizeof(data), "%s&overrideInternalAddress=%s", data, overrideInternalAddress);
+    Format(data, sizeof(data), "%s&internalIpAddress=%s", data, overrideInternalAddress);
   }
-
-  PrintToServer("%s", data);
 
   request.SetData("%s", data);
   request.SetUserAgent("tf2pickup.org connector plugin/%s", PLUGIN_VERSION);
