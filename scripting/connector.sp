@@ -110,7 +110,7 @@ public Action HeartbeatGameServer(Handle timerHandle)
     address, port, name, rconPassword, voiceChannelName, priority);
 
   char overrideInternalAddress[64];
-  tf2pickupOrgOverrideInternalAddress.getString(overrideInternalAddress, sizeof(overrideInternalAddress));
+  tf2pickupOrgOverrideInternalAddress.GetString(overrideInternalAddress, sizeof(overrideInternalAddress));
 
   if (!StrEqual(overrideInternalAddress, "")) {
     System2_URLEncode(overrideInternalAddress, sizeof(overrideInternalAddress), overrideInternalAddress);
