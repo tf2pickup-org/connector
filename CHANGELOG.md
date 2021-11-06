@@ -1,3 +1,15 @@
+# [0.4.0](https://github.com/tf2pickup-org/connector/compare/0.3.0...0.4.0) (2021-11-06)
+
+
+### Bug Fixes
+
+* don't send voiceChannelName if it's empty ([#11](https://github.com/tf2pickup-org/connector/issues/11)) ([e4adc52](https://github.com/tf2pickup-org/connector/commit/e4adc5290e603d5da8b640931ea84398f28408b4))
+
+
+### Features
+
+* add sm_tf2pickuporg_override_internal_address cvar ([#10](https://github.com/tf2pickup-org/connector/issues/10)) ([cca2e39](https://github.com/tf2pickup-org/connector/commit/cca2e39e2228735285d5536ffce62b3453b48ce0))
+
 # [0.3.0](https://github.com/tf2pickup-org/connector/compare/0.2.1...0.3.0) (2021-11-04)
 
 
