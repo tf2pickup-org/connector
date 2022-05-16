@@ -6,7 +6,6 @@
 
 ConVar tf2pickupOrgApiAddress = null;
 ConVar tf2pickupOrgSecret = null;
-ConVar tf2pickupOrgVoiceChannelName = null;
 ConVar tf2pickupOrgPriority = null;
 ConVar tf2pickupOrgOverrideInternalAddress = null;
 Handle timer = null;
@@ -28,7 +27,6 @@ public void OnPluginStart()
   tf2pickupOrgSecret = CreateConVar("sm_tf2pickuporg_secret", "", "tf2pickup.org gameserver secret");
   tf2pickupOrgSecret.AddChangeHook(OnApiAddressOrSecretChange);
 
-  tf2pickupOrgVoiceChannelName = CreateConVar("sm_tf2pickuporg_voice_channel_name", "", "gameserver voice channel name");
   tf2pickupOrgPriority = CreateConVar("sm_tf2pickuporg_priority", "1", "gameserver priority", _, true, -9999.99, true, 9999.99);
 
   tf2pickupOrgOverrideInternalAddress = CreateConVar("sm_tf2pickuporg_override_internal_address", "", "override internal game server address");
@@ -102,14 +100,6 @@ public Action HeartbeatGameServer(Handle timerHandle)
   char data[256];
   Format(data, sizeof(data), "address=%s&port=%s&name=%s&rconPassword=%s",
     address, port, name, rconPassword);
-
-  char voiceChannelName[64];
-  tf2pickupOrgVoiceChannelName.GetString(voiceChannelName, sizeof(voiceChannelName));
-
-  if (!StrEqual(voiceChannelName, "")) {
-    System2_URLEncode(voiceChannelName, sizeof(voiceChannelName), voiceChannelName);
-    Format(data, sizeof(data), "%s&voiceChannelName=%s", data, voiceChannelName);
-  }
 
   int priority = tf2pickupOrgPriority.IntValue;
   Format(data, sizeof(data), "%s&priority=%d", data, priority);
