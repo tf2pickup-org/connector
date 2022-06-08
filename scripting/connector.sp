@@ -77,7 +77,7 @@ public Action HeartbeatGameServer(Handle timerHandle)
     return Plugin_Stop;
   }
 
-  System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/game-servers/", apiAddress);
+  System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/static-game-servers/", apiAddress);
   request.SetHeader("Authorization", "secret %s", secret);
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
 
