@@ -2,7 +2,7 @@
 #include <system2>
 #include <SteamWorks>
 
-#define PLUGIN_VERSION "0.4.0"
+#define PLUGIN_VERSION "0.4.1"
 
 ConVar tf2pickupOrgApiAddress = null;
 ConVar tf2pickupOrgSecret = null;

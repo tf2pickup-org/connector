@@ -1,3 +1,11 @@
+## [0.4.1](https://github.com/tf2pickup-org/connector/compare/0.4.0...0.4.1) (2022-06-08)
+
+
+### Bug Fixes
+
+* get rid of sm_tf2pickuporg_voice_channel_name cvar ([#13](https://github.com/tf2pickup-org/connector/issues/13)) ([edba574](https://github.com/tf2pickup-org/connector/commit/edba574e71ca8bb63fab869f94b955ca05576468))
+* update endpoint address ([#12](https://github.com/tf2pickup-org/connector/issues/12)) ([a067328](https://github.com/tf2pickup-org/connector/commit/a0673284e8597d6a9b1260e0562cc9b137664df0))
+
 # [0.4.0](https://github.com/tf2pickup-org/connector/compare/0.3.0...0.4.0) (2021-11-06)
 
 
