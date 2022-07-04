@@ -62,6 +62,7 @@ public void PublicIpCallback(bool success, const char[] error, System2HTTPReques
 
   publicIpAddress[0] = '\0';
   response.GetContent(publicIpAddress, sizeof(publicIpAddress));
+  TrimString(publicIpAddress);
   PrintToServer("Gameserver public IP address: %s", publicIpAddress);
 }
 
