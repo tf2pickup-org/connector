@@ -34,7 +34,6 @@ public void OnPluginStart()
 
   RegServerCmd("sm_tf2pickuporg_heartbeat", CommandHeartbeat);
   ResolvePublicIpAddress();
-  delete request;
 }
 
 public void OnPluginEnd()
@@ -52,6 +51,7 @@ public void ResolvePublicIpAddress()
   System2HTTPRequest request = new System2HTTPRequest(PublicIpCallback, "https://api.ipify.org");
   request.SetUserAgent("tf2pickup.org connector plugin/%s", PLUGIN_VERSION);
   request.GET();
+  delete request;
 }
 
 public void PublicIpCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
