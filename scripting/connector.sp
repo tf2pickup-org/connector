@@ -1,6 +1,5 @@
 #include <sourcemod>
 #include <system2>
-#include <SteamWorks>
 
 #define PLUGIN_VERSION "0.4.1"
 
@@ -9,6 +8,7 @@ ConVar tf2pickupOrgSecret = null;
 ConVar tf2pickupOrgPriority = null;
 ConVar tf2pickupOrgOverrideInternalAddress = null;
 Handle timer = null;
+char publicIpAddress[64];
 
 public Plugin myinfo = 
 {
@@ -38,6 +38,30 @@ public void OnPluginStart()
 public void OnPluginEnd()
 {
 
+}
+
+public void ResolvePublicIpAddress()
+{
+  // int ipAddr[4];
+  // SteamWorks_GetPublicIP(ipAddr);
+
+  // char address[64];
+  // Format(address, sizeof(address), "%d.%d.%d.%d", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
+  System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "https://api.ipify.org");
+}
+
+public void PublicIpCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
+{
+  if (!success) {
+    char url[128];
+    request.GetURL(url, sizeof(url));
+    PrintToServer("ERROR: %s failed: %s", url, error);
+    return;
+  }
+
+  char buf[1024];
+  response.GetContent(buf, sizeof(buf));
+  PrintToServer("%s", buf);
 }
 
 public void OnApiAddressOrSecretChange(ConVar convar, char[] oldValue, char[] newValue)
@@ -79,12 +103,8 @@ public Action HeartbeatGameServer(Handle timerHandle)
   request.SetHeader("Authorization", "secret %s", secret);
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
 
-  int ipAddr[4];
-  SteamWorks_GetPublicIP(ipAddr);
-
   char address[64];
-  Format(address, sizeof(address), "%d.%d.%d.%d", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
-  System2_URLEncode(address, sizeof(address), address);
+  System2_URLEncode(address, sizeof(address), publicIpAddress);
 
   char port[6];
   GetConVarString(FindConVar("hostport"), port, sizeof(port));
