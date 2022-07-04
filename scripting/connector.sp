@@ -43,11 +43,6 @@ public void OnPluginEnd()
 
 public void ResolvePublicIpAddress()
 {
-  // int ipAddr[4];
-  // SteamWorks_GetPublicIP(ipAddr);
-
-  // char address[64];
-  // Format(address, sizeof(address), "%d.%d.%d.%d", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
   System2HTTPRequest request = new System2HTTPRequest(PublicIpCallback, "https://api.ipify.org");
   request.SetUserAgent("tf2pickup.org connector plugin/%s", PLUGIN_VERSION);
   request.GET();
@@ -65,12 +60,9 @@ public void PublicIpCallback(bool success, const char[] error, System2HTTPReques
     return;
   }
 
-  char url[128];
-  request.GetURL(url, sizeof(url));
-
-  char buf[1024];
-  response.GetContent(buf, sizeof(buf));
-  PrintToServer("%s: %s", url, buf);
+  publicIpAddress[0] = '\0';
+  response.GetContent(publicIpAddress, sizeof(publicIpAddress));
+  PrintToServer("Gameserver public IP address: %s", publicIpAddress);
 }
 
 public void OnApiAddressOrSecretChange(ConVar convar, char[] oldValue, char[] newValue)
@@ -98,6 +90,11 @@ public Action CommandHeartbeat(int args)
 
 public Action HeartbeatGameServer(Handle timerHandle)
 {
+  if (strlen(publicIpAddress) == 0) {
+    PrintToServer("Gameserver public IP address unknown; heartbeat impossible");
+    return Plugin_Stop;
+  }
+
   char apiAddress[128];
   tf2pickupOrgApiAddress.GetString(apiAddress, sizeof(apiAddress));
 
