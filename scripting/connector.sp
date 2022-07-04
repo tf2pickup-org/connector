@@ -52,6 +52,8 @@ public void ResolvePublicIpAddress()
   request.SetUserAgent("tf2pickup.org connector plugin/%s", PLUGIN_VERSION);
   request.GET();
   delete request;
+
+  PrintToServer("Querying https://api.ipify.org...");
 }
 
 public void PublicIpCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
@@ -63,9 +65,12 @@ public void PublicIpCallback(bool success, const char[] error, System2HTTPReques
     return;
   }
 
+  char url[128];
+  request.GetURL(url, sizeof(url));
+
   char buf[1024];
   response.GetContent(buf, sizeof(buf));
-  PrintToServer("%s", buf);
+  PrintToServer("%s: %s", url, buf);
 }
 
 public void OnApiAddressOrSecretChange(ConVar convar, char[] oldValue, char[] newValue)
