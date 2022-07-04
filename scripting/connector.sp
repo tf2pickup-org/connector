@@ -33,6 +33,7 @@ public void OnPluginStart()
   tf2pickupOrgOverrideInternalAddress.AddChangeHook(OnApiAddressOrSecretChange);
 
   RegServerCmd("sm_tf2pickuporg_heartbeat", CommandHeartbeat);
+  ResolvePublicIpAddress();
 }
 
 public void OnPluginEnd()
@@ -47,7 +48,7 @@ public void ResolvePublicIpAddress()
 
   // char address[64];
   // Format(address, sizeof(address), "%d.%d.%d.%d", ipAddr[0], ipAddr[1], ipAddr[2], ipAddr[3]);
-  System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "https://api.ipify.org");
+  System2HTTPRequest request = new System2HTTPRequest(PublicIpCallback, "https://api.ipify.org");
 }
 
 public void PublicIpCallback(bool success, const char[] error, System2HTTPRequest request, System2HTTPResponse response, HTTPRequestMethod method)
