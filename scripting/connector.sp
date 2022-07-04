@@ -2,6 +2,7 @@
 #include <system2>
 
 #define PLUGIN_VERSION "0.4.1"
+#define PUBLIC_IP_API_ADDRESS "https://api.ipify.org"
 
 ConVar tf2pickupOrgApiAddress = null;
 ConVar tf2pickupOrgSecret = null;
@@ -43,7 +44,7 @@ public void OnPluginEnd()
 
 public void ResolvePublicIpAddress()
 {
-  System2HTTPRequest request = new System2HTTPRequest(PublicIpCallback, "https://api.ipify.org");
+  System2HTTPRequest request = new System2HTTPRequest(PublicIpCallback, PUBLIC_IP_API_ADDRESS);
   request.SetUserAgent("tf2pickup.org connector plugin/%s", PLUGIN_VERSION);
   request.GET();
   delete request;
