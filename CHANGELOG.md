@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/tf2pickup-org/connector/compare/0.4.1...0.5.0) (2022-07-05)
+
+
+### Features
+
+* get rid of SteamWorks dependency ([#19](https://github.com/tf2pickup-org/connector/issues/19)) ([27b2de9](https://github.com/tf2pickup-org/connector/commit/27b2de964b79f1f4923e70baacf82df097764b9c))
+
 ## [0.4.1](https://github.com/tf2pickup-org/connector/compare/0.4.0...0.4.1) (2022-06-08)
 
 
