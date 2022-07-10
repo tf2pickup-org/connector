@@ -1,7 +1,7 @@
 #include <sourcemod>
 #include <system2>
 
-#define PLUGIN_VERSION "0.5.0"
+#define PLUGIN_VERSION "0.6.0"
 #define PUBLIC_IP_API_ADDRESS "https://api.ipify.org"
 
 ConVar tf2pickupOrgApiAddress = null;
