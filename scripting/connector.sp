@@ -8,6 +8,7 @@ ConVar tf2pickupOrgApiAddress = null;
 ConVar tf2pickupOrgSecret = null;
 ConVar tf2pickupOrgPriority = null;
 ConVar tf2pickupOrgOverrideInternalAddress = null;
+ConVar tf2pickupOrgOverridePublicAddress = null;
 Handle timer = null;
 char publicIpAddress[64];
 
@@ -32,6 +33,9 @@ public void OnPluginStart()
 
   tf2pickupOrgOverrideInternalAddress = CreateConVar("sm_tf2pickuporg_override_internal_address", "", "override internal game server address");
   tf2pickupOrgOverrideInternalAddress.AddChangeHook(OnApiAddressOrSecretChange);
+
+  tf2pickupOrgOverridePublicAddress = CreateConVar("sm_tf2pickuporg_override_public_address", "", "override public game server address");
+  tf2pickupOrgOverridePublicAddress.AddChangeHook(OnApiAddressOrSecretChange);
 
   RegServerCmd("sm_tf2pickuporg_heartbeat", CommandHeartbeat);
   ResolvePublicIpAddress();
@@ -112,7 +116,13 @@ public Action HeartbeatGameServer(Handle timerHandle)
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
 
   char address[64];
-  System2_URLEncode(address, sizeof(address), publicIpAddress);
+  char overridePublicAddress[64];
+  tf2pickupOrgOverridePublicAddress.GetString(overridePublicAddress, sizeof(overridePublicAddress));
+  if (!StrEqual(overridePublicAddress, "")) {
+    System2_URLEncode(address, sizeof(address), overridePublicAddress);
+  } else {
+    System2_URLEncode(address, sizeof(address), publicIpAddress);
+  }
 
   char port[6];
   GetConVarString(FindConVar("hostport"), port, sizeof(port));
