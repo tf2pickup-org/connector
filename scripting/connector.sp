@@ -96,9 +96,18 @@ public Action CommandHeartbeat(int args)
 
 public Action HeartbeatGameServer(Handle timerHandle)
 {
-  if (strlen(publicIpAddress) == 0) {
-    PrintToServer("Gameserver public IP address unknown; heartbeat impossible");
-    return Plugin_Stop;
+  char address[64];
+  char overridePublicAddress[64];
+  tf2pickupOrgOverridePublicAddress.GetString(overridePublicAddress, sizeof(overridePublicAddress));
+  if (!StrEqual(overridePublicAddress, "")) {
+    System2_URLEncode(address, sizeof(address), overridePublicAddress);
+  } else {
+    if (strlen(publicIpAddress) == 0) {
+      PrintToServer("Gameserver public IP address unknown; heartbeat impossible");
+      return Plugin_Stop;
+    }
+
+    System2_URLEncode(address, sizeof(address), publicIpAddress);
   }
 
   char apiAddress[128];
@@ -114,15 +123,6 @@ public Action HeartbeatGameServer(Handle timerHandle)
   System2HTTPRequest request = new System2HTTPRequest(HeartbeatHttpCallback, "%s/static-game-servers/", apiAddress);
   request.SetHeader("Authorization", "secret %s", secret);
   request.SetHeader("Content-Type", "application/x-www-form-urlencoded");
-
-  char address[64];
-  char overridePublicAddress[64];
-  tf2pickupOrgOverridePublicAddress.GetString(overridePublicAddress, sizeof(overridePublicAddress));
-  if (!StrEqual(overridePublicAddress, "")) {
-    System2_URLEncode(address, sizeof(address), overridePublicAddress);
-  } else {
-    System2_URLEncode(address, sizeof(address), publicIpAddress);
-  }
 
   char port[6];
   GetConVarString(FindConVar("hostport"), port, sizeof(port));
