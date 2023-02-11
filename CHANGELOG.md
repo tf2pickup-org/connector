@@ -1,3 +1,10 @@
+## [0.6.1](https://github.com/tf2pickup-org/connector/compare/0.6.0...0.6.1) (2023-02-11)
+
+
+### Bug Fixes
+
+* respect public IP address override ([#24](https://github.com/tf2pickup-org/connector/issues/24)) ([929ca28](https://github.com/tf2pickup-org/connector/commit/929ca2823e5b342affaa2a38fdba3a5befe4227f))
+
 # [0.6.0](https://github.com/tf2pickup-org/connector/compare/0.5.0...0.6.0) (2022-07-10)
 
 
