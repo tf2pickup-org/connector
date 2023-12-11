@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup sourcepawn compiler
       uses: rumblefrog/setup-sp@v1.2.2
@@ -58,7 +58,7 @@ jobs:
     needs: build
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Download the plugin
       uses: actions/download-artifact@v3
