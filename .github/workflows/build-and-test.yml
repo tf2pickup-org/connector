@@ -76,7 +76,7 @@ jobs:
       run: docker run --name connector -e "RCON_PASSWORD=123456" -d connector:test
 
     - name: Sleep for 45s
-      uses: juliangruber/sleep-action@v1
+      uses: juliangruber/sleep-action@v2
       with:
         time: 45s
 
