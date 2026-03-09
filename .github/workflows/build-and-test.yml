@@ -39,7 +39,7 @@ jobs:
           -o scripting/connector.smx
 
     - name: Upload compiled plugin
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: connector
         path: scripting/connector.smx
