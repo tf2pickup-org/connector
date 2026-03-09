@@ -1,3 +1,12 @@
+
+
+## [0.6.2](https://github.com/tf2pickup-org/connector/compare/0.6.1...0.6.2) (2026-03-09)
+
+
+### Bug Fixes
+
+* **ci:** replace alliedmods.net system2 download with GitHub release ([#41](https://github.com/tf2pickup-org/connector/issues/41)) ([ce943d0](https://github.com/tf2pickup-org/connector/commit/ce943d095e6fcac272b944523dbf6d9f2cc54ddb))
+
 ## [0.6.1](https://github.com/tf2pickup-org/connector/compare/0.6.0...0.6.1) (2023-02-11)
 
 
@@ -82,4 +91,3 @@
 ### Features
 
 * heartbeat initial implementation ([faa32d8](https://github.com/tf2pickup-org/connector/commit/faa32d8c6d2c4452440dc2c995cb2dc2e57f0b59))
-
