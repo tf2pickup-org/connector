@@ -68,7 +68,7 @@ jobs:
         path: connector.smx
 
     - name: Build Docker image
-      uses: docker/build-push-action@v6
+      uses: docker/build-push-action@v7
       with:
         tags: connector:test
         context: .
